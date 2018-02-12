@@ -24,7 +24,7 @@ class GameScene extends Scene {
     for (let i=0; i<20; ++i) {
       let bgSquare = new Sprite();
       bgSquare.setX(Quick.random(width)).setY(Quick.random(height));
-      bgSquare.setSize(10).setColor('yellow');
+      bgSquare.setSize(10, 10).setColor('yellow');
       this.add(bgSquare);
     }    
   }
@@ -66,7 +66,7 @@ class Player extends Sprite {
     super(x, y);
     this.controller = Quick.getController();
     this.setColor('White');
-    this.setSize(32);
+    this.setSize(32, 32);
   }
 
   // override
@@ -86,5 +86,5 @@ class Player extends Sprite {
 }
 
 Quick.setName('Skel');
-//Quick.setKeepAspect(true);  // I'd have this set
+Quick.setKeepAspect(true);  // I'd have this set
 Quick.init(function () { return new GameScene() });
