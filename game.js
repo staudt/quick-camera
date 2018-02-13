@@ -6,27 +6,25 @@ const Quick = quick.Quick;
 const Sprite = quick.Sprite;
 const Scene = quick.Scene;
 
-// constants
-const SPEED = 2;
-
 // classes
 class GameScene extends Scene {
   constructor() {
     super();
-    let width = Quick.getWidth()*1.5;
-    let height = Quick.getHeight()*1.5;
-    this.setWidth(width).setHeight(height);
-    this.add(new Background(width, height));
-    let player = new Player(this.getCenterX(), this.getCenterY());
+    this.setWidth(950).setHeight(600);
+    this.add(new Background());
+    let player = new Player();
     this.add(player);
     this.add(new Camera(player));
     // random squares to give some movement perspective:
     for (let i=0; i<20; ++i) {
-      let bgSquare = new Sprite();
-      bgSquare.setX(Quick.random(width)).setY(Quick.random(height));
-      bgSquare.setSize(10, 10).setColor('yellow');
-      this.add(bgSquare);
-    }    
+      this.add(
+        new Sprite()
+          .setCenterX(Quick.random(950))
+          .setCenterY(Quick.random(600))
+          .setSize(10, 10)
+          .setColor('yellow')
+      );
+    }
   }
 }
 
@@ -49,42 +47,45 @@ class Camera extends Sprite {
     } else if (y > this.getScene().getHeight()-Quick.getHeight()) {
       y = this.getScene().getHeight()-Quick.getHeight();
     }
-      this.getScene().setX(x).setY(y);
+    this.getScene().setX(x).setY(y);
   }
 }
 
 class Background extends Sprite {
-  constructor(width, height) {
-    super(0, 0, width, height);
-    // without setting color, you get a quake-like no-clip glitch
-    this.setColor('green');
+  constructor() {
+    super();
+    this.setColor('Black');
+  }
+
+  init() {
+    this.setSize(this.getScene());
   }
 }
 
 class Player extends Sprite {
-  constructor(x, y) {
-    super(x, y);
+  constructor() {
+    super();
+    this.speed = 3;
     this.controller = Quick.getController();
     this.setColor('White');
     this.setSize(32, 32);
   }
 
-  // override
   update() {
     if (this.controller.keyDown(CommandEnum.LEFT) && this.getLeft() > 0) {
-      this.moveX(-SPEED);
+      this.moveX(-this.speed);
     } else if (this.controller.keyDown(CommandEnum.RIGHT) && this.getRight() < this.getScene().getWidth()) {
-      this.moveX(SPEED);
+      this.moveX(this.speed);
     }
 
     if (this.controller.keyDown(CommandEnum.UP) && this.getTop() > 0) {
-      this.moveY(-SPEED);
+      this.moveY(-this.speed);
     } else if (this.controller.keyDown(CommandEnum.DOWN) && this.getBottom() < this.getScene().getHeight()) {
-      this.moveY(SPEED);
+      this.moveY(this.speed);
     }
   }
 }
 
 Quick.setName('Skel');
-Quick.setKeepAspect(true);  // I'd have this set
+//Quick.setKeepAspect(true);  // I'd have this set
 Quick.init(function () { return new GameScene() });
